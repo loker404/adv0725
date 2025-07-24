@@ -130,6 +130,6 @@ fi
 ./selfplay/train.sh "$EXPERIMENT_DIR" t0 "$MODEL_KIND" 256 main -use-fp16 \
   -disable-vtimeloss \
   -lr-scale "$LR_SCALE" \
-  -initial-checkpoint /workspace/checkpoint.ckpt
+  -initial-checkpoint /workspace/checkpoint.ckpt \
   ${PYTORCH_CHECKPOINT:+"-initial-checkpoint" "$PYTORCH_CHECKPOINT"} \
   "$@"
