@@ -7,6 +7,7 @@ function assert_exists() {
   fi
 }
 
+USE_PYTORCH=1
 USE_GATING=0
 USE_TORCHSCRIPT=0
 # Command line flag parsing (https://stackoverflow.com/a/33826763/4865149).
@@ -37,7 +38,7 @@ shift
 shift
 
 if [ -n "${USE_PYTORCH:-}" ]; then
-  cd /engines/KataGo-custom/python
+  cd engines/KataGo-custom/python
 else
   if [ "${USE_TORCHSCRIPT:-}" -eq 1 ]; then
     echo "Error: --use-pytorch is required if --use-torchscript is set."
@@ -50,7 +51,7 @@ else
 fi
 
 # not related to shuffle-and-export but we want some process to log this
-/go_attack/kubernetes/log-git-commit.sh /"$VOLUME_NAME"/victimplay/"$RUN_NAME"
+/workspace//go_attack/kubernetes/log-git-commit.sh /"$VOLUME_NAME"/victimplay/"$RUN_NAME"
 
 EXPERIMENT_DIR=/"$VOLUME_NAME"/victimplay/"$RUN_NAME"
 mkdir --parents "$EXPERIMENT_DIR"/selfplay
@@ -85,5 +86,6 @@ if [ -n "${PRESEED_SRC:-}" ] && [ ! -d "$PRESEED_DST" ]; then
 fi
 
 # shellcheck disable=SC2086
-./selfplay/shuffle_and_export_loop.sh "$RUN_NAME" "$EXPERIMENT_DIR" /tmp 16 256 $USE_GATING $USE_TORCHSCRIPT "$@"
-sleep infinity
+#./selfplay/shuffle_and_export_loop.sh "$RUN_NAME" "$EXPERIMENT_DIR" /tmp 16 256 $USE_GATING $USE_TORCHSCRIPT "$@"
+./selfplay/shuffle.sh "$EXPERIMENT_DIR" /tmp 8 256 -min-rows 100000 "$@"
+sleep 1

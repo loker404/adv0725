@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-CONFIG=/go_attack/configs/active-experiment.cfg
+CONFIG=configs/active-experiment.cfg
 while [ -n "${1-}" ]; do
   case $1 in
     # Specifies the config to use.
@@ -29,12 +29,12 @@ while [ -n "${USE_WARMSTART:-}" ] &&
 done
 
 mkdir -p /"$VOLUME_NAME"/victimplay/"$RUN_NAME"
-KATAGO_BIN=/engines/KataGo-custom/cpp/katago
+KATAGO_BIN=engines/KataGo-custom/cpp/katago
 FLAGS=(
   "-output-dir" "/$VOLUME_NAME/victimplay/$RUN_NAME/selfplay/"
   "-models-dir" "/$VOLUME_NAME/victimplay/$RUN_NAME/models/"
   "-config" "$CONFIG"
-  "-config" "/go_attack/configs/compute/1gpu.cfg"
+  "-config" "configs/compute/1gpu.cfg"
 )
 if [ -n "${USE_SELFPLAY:-}" ]; then
   $KATAGO_BIN selfplay "${FLAGS[@]}" "$@"

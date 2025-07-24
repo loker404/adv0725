@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 MODEL_KIND=b6c96
-COPY_INITIAL_MODEL=1
+COPY_INITIAL_MODEL=0
+USE_PYTORCH=1
 # Command line flag parsing (https://stackoverflow.com/a/33826763/4865149).
 # Flags must be specified before positional arguments.
 while [ -n "${1-}" ]; do
@@ -36,9 +37,9 @@ shift
 shift
 
 if [ -n "${USE_PYTORCH:-}" ]; then
-  cd /engines/KataGo-custom/python
+  cd engines/KataGo-custom/python
 else
-  cd /engines/KataGo-tensorflow/python
+  cd engines/KataGo-tensorflow/python
 fi
 
 EXPERIMENT_DIR=/"$VOLUME_NAME"/victimplay/"$RUN_NAME"
@@ -126,9 +127,9 @@ fi
 
 # Only add the PyTorch-only flag -initial-checkpoint if we're warmstarting
 # with PyTorch.
-./selfplay/train.sh "$EXPERIMENT_DIR" t0 "$MODEL_KIND" 256 main \
+./selfplay/train.sh "$EXPERIMENT_DIR" t0 "$MODEL_KIND" 256 main -use-fp16 \
   -disable-vtimeloss \
   -lr-scale "$LR_SCALE" \
-  -max-train-bucket-per-new-data 4 \
+  -initial-checkpoint /workspace/checkpoint.ckpt
   ${PYTORCH_CHECKPOINT:+"-initial-checkpoint" "$PYTORCH_CHECKPOINT"} \
   "$@"
